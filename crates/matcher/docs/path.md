@@ -21,7 +21,7 @@ router:
       matchers:
         - kind: Path
           args:
-            patterns: /a/*ignore
+            patterns: /a/{*ignore}
 ```
 
 - **快捷配置**
@@ -31,5 +31,5 @@ router:
   routes:
     - id: path-shortcut
       matchers:
-        - Path=/a/*ignore
+        - Path=/a/{*ignore}
 ```
