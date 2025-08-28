@@ -1,5 +1,6 @@
 use crate::proxy::client::Client;
 use futures::future::LocalBoxFuture;
+use http::header::HOST;
 use http::{HeaderName, Request, Response, Uri};
 use satex_core::Error;
 use satex_core::body::Body;
@@ -31,6 +32,7 @@ pub struct ProxyRouteService<D> {
     client: Client,
     digester: Arc<D>,
     load_balancer: Option<Arc<LoadBalancer>>,
+    preserve_host: bool,
 }
 
 impl<D> ProxyRouteService<D> {
@@ -39,12 +41,14 @@ impl<D> ProxyRouteService<D> {
         client: Client,
         digester: D,
         load_balancer: Option<Arc<LoadBalancer>>,
+        preserve_host: bool,
     ) -> Self {
         Self {
             url,
             client,
             digester: Arc::new(digester),
             load_balancer,
+            preserve_host,
         }
     }
 }
@@ -85,6 +89,11 @@ where
         REMOVE_HEADERS.iter().for_each(|header| {
             headers.remove(header);
         });
+
+        // 如果不保留host请求头
+        if !self.preserve_host {
+            headers.remove(HOST);
+        }
 
         debug!("proxy send request:\n{:#?}", request);
 

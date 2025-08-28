@@ -17,6 +17,8 @@ use url::Url;
 struct MakeProxyRouteService {
     uri: String,
     #[serde(default)]
+    preserve_host: Option<bool>,
+    #[serde(default)]
     client: ClientConfig,
 }
 
@@ -37,6 +39,7 @@ impl MakeRouteService for MakeProxyRouteService {
                         Client::from(config.client),
                         DefaultDigester,
                         load_balancer,
+                        config.preserve_host.unwrap_or(false),
                     )
                 })
         })
