@@ -26,7 +26,7 @@ impl Component {
         }
     }
 
-    pub fn args(&self) -> Args {
+    pub fn args(&'_ self) -> Args<'_> {
         match self {
             Component::Shortcut(text) => match text.split_once('=').map(|(_, item)| item) {
                 Some(args) => Args::Shortcut(Some(args)),
