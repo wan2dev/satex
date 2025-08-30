@@ -18,21 +18,26 @@ const SATEX: &str = "Satex";
 ///
 const SATEX_YAML: &str = "satex.yaml";
 
-///
-/// 配置文件监控扫描间隔时间
-///
-const WATCH_FILE_INTERVAL: Duration = Duration::from_secs(10);
-
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Error> {
     let registry = Registry::default();
     let path = get_config_path()?;
-    let events = ConfigFileWatchEvents::events(registry.clone(), path.clone(), WATCH_FILE_INTERVAL);
-    let config = Config::from_yaml(path)?;
-    App::new(SATEX, config, registry)
-        .with_events(events)
-        .run()
-        .await
+    let config = Config::from_yaml(&path)?;
+    let refresh_enabled = config.refresh.enabled;
+    let refresh_frequency = config.refresh.frequency;
+    let app = App::new(SATEX, config, registry.clone());
+    match refresh_enabled {
+        true => {
+            app.with_events(ConfigFileWatchEvents::stream(
+                registry,
+                path,
+                Duration::from_millis(refresh_frequency),
+            ))
+            .run()
+            .await
+        }
+        false => app.run().await,
+    }
 }
 
 /// 获取配置文件路径
@@ -50,10 +55,10 @@ fn get_config_path() -> Result<PathBuf, Error> {
         .collect::<VecDeque<_>>();
     let path = loop {
         if let Some(arg) = args.pop_front() {
-            if arg == "-c" || arg == "--config" {
-                if let Some(value) = args.pop_front() {
-                    break Some(value);
-                }
+            if (arg == "-c" || arg == "--config")
+                && let Some(value) = args.pop_front()
+            {
+                break Some(value);
             }
         } else {
             break None;

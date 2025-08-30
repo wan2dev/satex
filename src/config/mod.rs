@@ -1,11 +1,13 @@
+use crate::config::refresh::Refresh;
 use crate::config::router::Router;
 use crate::config::server::Server;
 use crate::config::tracing::Tracing;
-use satex_core::component::Component;
 use satex_core::Error;
+use satex_core::component::Component;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 
+mod refresh;
 pub mod router;
 pub mod server;
 pub mod tracing;
@@ -15,6 +17,12 @@ pub mod tracing;
 ///
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub struct Config {
+    ///
+    /// 配置刷新频率
+    ///
+    #[serde(default)]
+    pub refresh: Refresh,
+
     ///
     /// 服务配置
     ///

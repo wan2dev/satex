@@ -5,27 +5,27 @@ use async_stream::stream;
 use futures::Stream;
 use satex_core::Error;
 use satex_server::router::Event;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::time::{Duration, SystemTime};
 use tokio::fs::metadata;
 use tokio::spawn;
-use tokio::sync::mpsc::{channel, Sender};
+use tokio::sync::mpsc::{Sender, channel};
 use tokio::time::sleep;
 use tracing::error;
 
 pub struct ConfigFileWatchEvents;
 
 impl ConfigFileWatchEvents {
-    pub fn events(
+    pub fn stream(
         registry: Registry,
-        file: PathBuf,
-        interval: Duration,
-    ) -> impl Stream<Item=Event> {
+        file: impl AsRef<Path> + Send + Sync + 'static,
+        frequency: Duration,
+    ) -> impl Stream<Item = Event> {
         let (tx, mut rx) = channel(1024);
 
         // spawn watch task
         spawn(async move {
-            if let Err(e) = watch(tx, registry, file, interval).await {
+            if let Err(e) = watch(tx, registry, file, frequency).await {
                 error!("Watch config file error: {}", e);
             }
         });
