@@ -1,12 +1,12 @@
 use futures_util::future::LocalBoxFuture;
 use std::fmt;
 use std::task::{Context, Poll};
-use tower::layer::{layer_fn, LayerFn};
+use tower::layer::{LayerFn, layer_fn};
 use tower::{Service, ServiceExt};
 
 pub struct SyncBoxCloneService<T, U, E>(
     Box<
-        dyn CloneService<T, Response=U, Error=E, Future=LocalBoxFuture<'static, Result<U, E>>>
+        dyn CloneService<T, Response = U, Error = E, Future = LocalBoxFuture<'static, Result<U, E>>>
             + Send
             + Sync,
     >,

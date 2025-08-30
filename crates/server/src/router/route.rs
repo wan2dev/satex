@@ -10,7 +10,7 @@ use satex_matcher::{ArcRouteMatcher, RouteMatcher};
 use satex_service::RouteService;
 use std::sync::Arc;
 use std::task::{Context, Poll};
-use tower::{service_fn, Layer, Service};
+use tower::{Layer, Service, service_fn};
 
 #[derive(Clone)]
 pub struct Route {
@@ -55,7 +55,7 @@ impl Builder {
 
     pub fn service<S, E, ResBody>(mut self, service: S) -> Self
     where
-        S: Service<Request<Body>, Response=Response<ResBody>, Error=E>
+        S: Service<Request<Body>, Response = Response<ResBody>, Error = E>
             + Clone
             + Send
             + Sync
@@ -70,7 +70,7 @@ impl Builder {
 
     pub fn layer<S, L, E, ResBody>(mut self, layer: L) -> Self
     where
-        S: Service<Request<Body>, Response=Response<ResBody>, Error=E>
+        S: Service<Request<Body>, Response = Response<ResBody>, Error = E>
             + Clone
             + Send
             + Sync

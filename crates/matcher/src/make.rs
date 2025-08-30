@@ -1,8 +1,8 @@
 use crate::{ArcRouteMatcher, RouteMatcher};
+use satex_core::Error;
 use satex_core::component::Args;
 use satex_core::make::Make;
 use satex_core::util::try_downcast;
-use satex_core::Error;
 use std::sync::Arc;
 
 pub trait MakeRouteMatcher: Make {
@@ -24,7 +24,7 @@ pub trait MakeRouteMatcher: Make {
 }
 
 #[derive(Clone)]
-pub struct ArcMakeRouteMatcher(Arc<dyn MakeRouteMatcher<Matcher=ArcRouteMatcher> + Send + Sync>);
+pub struct ArcMakeRouteMatcher(Arc<dyn MakeRouteMatcher<Matcher = ArcRouteMatcher> + Send + Sync>);
 
 impl ArcMakeRouteMatcher {
     pub fn new<M>(make: M) -> Self
