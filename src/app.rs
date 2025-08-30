@@ -1,11 +1,11 @@
 use crate::config::Config;
 use crate::make_router::MakeRouter;
 use crate::registry::Registry;
-use futures::stream::Empty;
 use futures::Stream;
+use futures::stream::Empty;
 use satex_core::Error;
-use satex_server::router::{Event, MakeRouterService};
 use satex_server::Server;
+use satex_server::router::{Event, MakeRouterService};
 use std::net::SocketAddr;
 use tokio::spawn;
 use tracing::Level;
@@ -41,7 +41,7 @@ impl App {
 
 impl<S> App<S>
 where
-    S: Stream<Item=Event> + Send + 'static,
+    S: Stream<Item = Event> + Send + 'static,
 {
     pub async fn run(self) -> Result<(), Error> {
         let App {
