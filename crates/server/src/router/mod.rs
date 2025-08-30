@@ -14,7 +14,7 @@ use satex_core::extension::{RawUri, RouteId};
 use satex_core::util::ResponseExt;
 use satex_core::{BoxError, Error};
 use satex_matcher::RouteMatcher;
-use std::future::{poll_fn, ready, Ready};
+use std::future::{Ready, poll_fn, ready};
 use std::pin::pin;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -37,7 +37,7 @@ impl Router {
 
     pub fn into_dynamic_service<S, F>(self, events: S, f: F) -> MakeRouterService
     where
-        S: Stream<Item=Event> + Send + 'static,
+        S: Stream<Item = Event> + Send + 'static,
         F: FnOnce(BoxFuture<'static, ()>),
     {
         let routes = Arc::new(RwLock::new(self.routes));
@@ -79,7 +79,7 @@ pub enum InternalRouter {
 
 impl<ReqBody> HyperService<Request<ReqBody>> for InternalRouter
 where
-    ReqBody: http_body::Body<Data=Bytes> + Send + 'static,
+    ReqBody: http_body::Body<Data = Bytes> + Send + 'static,
     ReqBody::Error: Into<BoxError>,
 {
     type Response = Response<Body>;
@@ -104,7 +104,7 @@ where
                     match poll_fn(|ctx| {
                         <Route as Service<Request<ReqBody>>>::poll_ready(&mut route, ctx)
                     })
-                        .await
+                    .await
                     {
                         Ok(_) => {
                             // raw uri
@@ -115,8 +115,8 @@ where
                             poll_fn(|ctx| {
                                 <Route as Service<Request<ReqBody>>>::poll_ready(&mut route, ctx)
                             })
-                                .await
-                                .map_err(Error::new)?;
+                            .await
+                            .map_err(Error::new)?;
 
                             // call route
                             route.call(Request::from_parts(parts, body)).await

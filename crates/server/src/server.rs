@@ -1,8 +1,8 @@
 use crate::factory::HttpServiceFactory;
 use actix_server::Server as ActixServer;
 use actix_service::ServiceFactoryExt;
-use actix_tls::accept::rustls_0_23::reexports::ServerConfig;
 use actix_tls::accept::rustls_0_23::Acceptor as TlsAcceptor;
+use actix_tls::accept::rustls_0_23::reexports::ServerConfig;
 use http::{Request, Response};
 use hyper::body::Incoming;
 use hyper::service::Service as HyperService;
@@ -102,7 +102,7 @@ impl TlsBuilder {
         self
     }
 
-    pub fn extend_alpn_protocols<I: IntoIterator<Item=P>, P: Into<String>>(
+    pub fn extend_alpn_protocols<I: IntoIterator<Item = P>, P: Into<String>>(
         mut self,
         protocols: I,
     ) -> Self {
@@ -111,7 +111,7 @@ impl TlsBuilder {
         self
     }
 
-    pub fn alpn_protocols<I: IntoIterator<Item=P>, P: Into<String>>(
+    pub fn alpn_protocols<I: IntoIterator<Item = P>, P: Into<String>>(
         mut self,
         protocols: I,
     ) -> Self {
@@ -158,8 +158,8 @@ impl Server<()> {
 
 impl<M, S, ResBody> Server<M>
 where
-    M: HyperService<(), Response=S, Error=()> + Clone + Send + 'static,
-    S: HyperService<Request<Incoming>, Response=Response<ResBody>> + Clone + 'static,
+    M: HyperService<(), Response = S, Error = ()> + Clone + Send + 'static,
+    S: HyperService<Request<Incoming>, Response = Response<ResBody>> + Clone + 'static,
     S::Error: Into<BoxError>,
     ResBody: http_body::Body + 'static,
     ResBody::Error: Into<BoxError>,

@@ -2,14 +2,14 @@
 
 use crate::RouteMatcher;
 use async_trait::async_trait;
-use http::request::Parts;
 use http::Method;
+use http::request::Parts;
 use std::collections::HashSet;
 
 use crate::make::MakeRouteMatcher;
+use satex_core::Error;
 use satex_core::component::{Args, Configurable};
 use satex_core::util::With;
-use satex_core::Error;
 use satex_macro::make;
 use std::str::FromStr;
 
@@ -45,7 +45,7 @@ pub struct MethodRouteMatcher {
 }
 
 impl MethodRouteMatcher {
-    pub fn new<I: IntoIterator<Item=Method>>(iter: I) -> Self {
+    pub fn new<I: IntoIterator<Item = Method>>(iter: I) -> Self {
         Self {
             methods: HashSet::from_iter(iter),
         }

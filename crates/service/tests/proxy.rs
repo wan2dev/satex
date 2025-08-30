@@ -61,7 +61,10 @@ async fn make_with_shortcut() {
         sleep(Duration::from_secs(1)).await;
 
         let service = MakeProxyRouteService
-            .make(Args::Shortcut(Some("http://127.0.0.1:34567/")), &Extensions::default())
+            .make(
+                Args::Shortcut(Some("http://127.0.0.1:34567/")),
+                &Extensions::default(),
+            )
             .unwrap();
         call(service).await
     });
@@ -76,7 +79,9 @@ async fn make_with_full() {
 
         let value = serde_yaml::from_str::<Value>(r#"uri: http://127.0.0.1:34567"#).unwrap();
         let args = Args::Full(&value);
-        let service = MakeProxyRouteService.make(args, &Extensions::default()).unwrap();
+        let service = MakeProxyRouteService
+            .make(args, &Extensions::default())
+            .unwrap();
         call(service).await
     });
 }

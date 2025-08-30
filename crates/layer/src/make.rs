@@ -17,14 +17,14 @@ pub trait MakeRouteLayer: Make {
 }
 
 #[derive(Clone)]
-pub struct ArcMakeRouteLayer(Arc<dyn MakeRouteLayer<Layer=ArcRouteLayer> + Send + Sync>);
+pub struct ArcMakeRouteLayer(Arc<dyn MakeRouteLayer<Layer = ArcRouteLayer> + Send + Sync>);
 
 impl ArcMakeRouteLayer {
     pub fn new<M, L, S, E, ResBody>(make: M) -> Self
     where
-        M: MakeRouteLayer<Layer=L> + Send + Sync + 'static,
-        L: Layer<RouteService, Service=S> + Send + Sync + 'static,
-        S: Service<Request<Body>, Response=Response<ResBody>, Error=E>
+        M: MakeRouteLayer<Layer = L> + Send + Sync + 'static,
+        L: Layer<RouteService, Service = S> + Send + Sync + 'static,
+        S: Service<Request<Body>, Response = Response<ResBody>, Error = E>
             + Clone
             + Send
             + Sync
@@ -42,9 +42,9 @@ struct MapMake<M>(M);
 
 impl<M, L, S, E, ResBody> Make for MapMake<M>
 where
-    M: MakeRouteLayer<Layer=L>,
-    S: Service<Request<Body>, Response=Response<ResBody>, Error=E>,
-    L: Layer<RouteService, Service=S>,
+    M: MakeRouteLayer<Layer = L>,
+    S: Service<Request<Body>, Response = Response<ResBody>, Error = E>,
+    L: Layer<RouteService, Service = S>,
 {
     fn name(&self) -> &'static str {
         self.0.name()
@@ -53,9 +53,9 @@ where
 
 impl<M, L, S, E, ResBody> MakeRouteLayer for MapMake<M>
 where
-    M: MakeRouteLayer<Layer=L>,
-    L: Layer<RouteService, Service=S> + Send + Sync + 'static,
-    S: Service<Request<Body>, Response=Response<ResBody>, Error=E>
+    M: MakeRouteLayer<Layer = L>,
+    L: Layer<RouteService, Service = S> + Send + Sync + 'static,
+    S: Service<Request<Body>, Response = Response<ResBody>, Error = E>
         + Clone
         + Send
         + Sync

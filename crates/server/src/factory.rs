@@ -2,9 +2,9 @@ use actix_service::{Service as ActixService, ServiceFactory};
 use actix_tls::accept::rustls_0_23::TlsStream;
 use futures::future::LocalBoxFuture;
 use http::Response;
-use hyper::body::Incoming;
-use hyper::service::{service_fn, Service as HyperService};
 use hyper::Request;
+use hyper::body::Incoming;
+use hyper::service::{Service as HyperService, service_fn};
 use hyper_util::rt::TokioIo;
 use hyper_util::server::conn::auto::Builder as ConnectorBuilder;
 use satex_core::executor::SpawnLocalExecutor;
@@ -35,8 +35,8 @@ impl<M> HttpServiceFactory<M> {
 impl<A, M, S, ResBody> ServiceFactory<A> for HttpServiceFactory<M>
 where
     A: AsyncRead + AsyncWrite + Send + Unpin + 'static,
-    M: HyperService<(), Response=S, Error=()> + Clone + 'static,
-    S: HyperService<Request<Incoming>, Response=Response<ResBody>> + Clone + 'static,
+    M: HyperService<(), Response = S, Error = ()> + Clone + 'static,
+    S: HyperService<Request<Incoming>, Response = Response<ResBody>> + Clone + 'static,
     S::Error: Into<BoxError>,
     ResBody: http_body::Body + 'static,
     ResBody::Error: Into<BoxError>,
@@ -68,7 +68,7 @@ pub(crate) struct HttpService<S> {
 impl<A, S, ResBody> ActixService<A> for HttpService<S>
 where
     A: AsyncRead + AsyncWrite + Send + Unpin + 'static,
-    S: HyperService<Request<Incoming>, Response=Response<ResBody>> + Clone + 'static,
+    S: HyperService<Request<Incoming>, Response = Response<ResBody>> + Clone + 'static,
     S::Error: Into<BoxError>,
     ResBody: http_body::Body + 'static,
     ResBody::Error: Into<BoxError>,

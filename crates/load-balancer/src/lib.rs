@@ -92,7 +92,6 @@ impl<'a> TryFrom<(&'a str, usize)> for Backend {
     }
 }
 
-
 pub struct Backends {
     discovery: Box<dyn Discovery + Send + Sync>,
     health_check: Option<Arc<dyn HealthCheck + Send + Sync>>,

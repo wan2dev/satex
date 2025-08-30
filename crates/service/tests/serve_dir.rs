@@ -39,7 +39,9 @@ async fn call_file() {
 async fn make_with_shortcut() {
     let path = format!("{}", test_file_dir().display());
     let args = Args::shortcut(&path);
-    let service = MakeServeDirRouteService.make(args, &Extensions::default()).unwrap();
+    let service = MakeServeDirRouteService
+        .make(args, &Extensions::default())
+        .unwrap();
     call(service).await
 }
 
@@ -48,6 +50,8 @@ async fn make_with_full() {
     let path = format!("{}", test_file_dir().display());
     let value = serde_yaml::from_str::<Value>(&format!(r#"path: {}"#, path)).unwrap();
     let args = Args::full(&value);
-    let service = MakeServeDirRouteService.make(args, &Extensions::default()).unwrap();
+    let service = MakeServeDirRouteService
+        .make(args, &Extensions::default())
+        .unwrap();
     call(service).await
 }

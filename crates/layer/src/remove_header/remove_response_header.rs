@@ -3,10 +3,10 @@ use crate::remove_header::Removable;
 use http::HeaderName;
 use pin_project_lite::pin_project;
 use satex_core::component::Args;
-use satex_core::{component::Configurable, Error};
+use satex_core::{Error, component::Configurable};
 use satex_macro::make;
 use std::pin::Pin;
-use std::task::{ready, Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::{str::FromStr, sync::Arc};
 use tower::{Layer, Service};
 
@@ -59,7 +59,7 @@ pub struct RemoveResponseHeader<S> {
 
 impl<S, Req, Res> Service<Req> for RemoveResponseHeader<S>
 where
-    S: Service<Req, Response=Res>,
+    S: Service<Req, Response = Res>,
     Res: Removable,
 {
     type Response = S::Response;
@@ -99,7 +99,7 @@ impl<F> ResponseFuture<F> {
 
 impl<F, Res, E> Future for ResponseFuture<F>
 where
-    F: Future<Output=Result<Res, E>>,
+    F: Future<Output = Result<Res, E>>,
     Res: Removable,
 {
     type Output = F::Output;
